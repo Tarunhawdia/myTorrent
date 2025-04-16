@@ -1,2 +1,2 @@
 # myTorrect
-A bit torrent clinet in Go
+A bit torrent client in Go
