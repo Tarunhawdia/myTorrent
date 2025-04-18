@@ -1,32 +1,22 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+	"log"
 
 	"github.com/tarunhawdia/myTorrent/bencode"
 )
 
 func main() {
-	file, err := os.Open("alice.torrent")
+	tf, err := bencode.ParseTorrentFile("alice.torrent")
 	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	result, err := bencode.Decode(bufio.NewReader(file))
-	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
-	torrent, ok := result.(map[string]interface{})
-	if !ok {
-		panic("Expected top-level dict")
-	}
-
-	// Print info dictionary
-	if info, ok := torrent["info"]; ok {
-		fmt.Printf("Info dictionary: %#v\n", info)
-	}
+	fmt.Println("Announce URL:", tf.Announce)
+	fmt.Printf("Info Hash: %x\n", tf.InfoHash)
+	fmt.Println("Piece Length:", tf.PieceLength)
+	fmt.Println("File Name:", tf.Name)
+	fmt.Println("File Length:", tf.Length)
+	fmt.Println("Number of Pieces:", len(tf.Pieces))
 }
